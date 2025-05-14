@@ -509,7 +509,7 @@ cube = RubiksCube()
 
 
 
-moves = 'D2 -R -U L U2 -D F -U -D F2 D2 R L F2 -L F2 U2 -L B2 D2'.split()
+moves = 'R2 L -F L U -D L B2 R2 B2 U L2 F2 D B2 U2 D L2 F'.split()
 for move in moves:
     cube.turn(move)
 print(moves)

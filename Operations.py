@@ -9,7 +9,7 @@ def history(moves):
         moves = str(moves).split()
 
 
-    turn_history.extend(moves)
+    turn_history.append(moves)
 
     return turn_history
 
