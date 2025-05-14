@@ -150,13 +150,14 @@ class EdgesSolve:
 
 def main():
     edge = EdgesSolve()
-    print(edge.frontSide)
 
     while not edge.is_solved():
         edge.top_edge_solve()
 
     for i in range(0, len(turn_history), 10):
-        print(' '.join(turn_history[i:i + 10]))
+        print(turn_history[i:i + 10])
+
+
 
     if ['b', 'o'] == edge.a_slot:
         print("True")
