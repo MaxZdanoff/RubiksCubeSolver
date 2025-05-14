@@ -322,3 +322,48 @@ def rotate_moves(moves, side):
             i += 1
 
     return rotated_moves
+
+
+def jrotate_moves(moves, side):
+    rotated_moves = []
+
+    if side == 'left':
+        rotate_left = {
+            'R': 'F', 'R2': 'F2', '-R': '-F', 'L': 'B', 'L2': 'B2', '-L': '-B',
+            'F': 'L', 'F2': 'L2', '-F': '-L', 'B': 'R', 'B2': 'R2', '-B': '-R'
+        }
+
+        for i in range(len(moves)-1):
+            if moves[i] in rotate_left.keys():
+                rotated_moves.append(rotate_left[moves[i]])
+            else:
+                rotated_moves.append(moves[i])
+
+
+    if side == 'back':
+        rotate_back = {
+            'R': 'L', 'R2': 'L2', '-R': '-L', 'L': 'R', 'L2': 'R2', '-L': '-R',
+            'F': 'B', 'F2': 'B2', '-F': '-B', 'B': 'F', 'B2': 'F2', '-B': '-F'
+        }
+
+        for i in range(len(moves)-1):
+            if moves[i] in rotate_back.keys():
+                rotated_moves.append(rotate_back[moves[i]])
+            else:
+                rotated_moves.append(moves[i])
+
+
+    if side == 'right':
+        rotate_right = {
+            'R': 'B', 'R2': 'B2', '-R': '-B', 'L': 'F', 'L2': 'F2', '-L': '-F',
+            'F': 'R', 'F2': 'R2', '-F': '-R', 'B': 'L', 'B2': 'L2', '-B': '-L'
+        }
+
+        for i in range(len(moves)-1):
+            if moves[i] in rotate_right.keys():
+                rotated_moves.append(rotate_right[moves[i]])
+            else:
+                rotated_moves.append(moves[i])
+
+
+    return rotated_moves
