@@ -1,14 +1,11 @@
 
-
 import numpy as np
-
 turn_history = []
-def history(moves):
 
+
+def history(moves):
     if type(moves) is not str:
         moves = str(moves).split()
-
-
     turn_history.append(moves)
 
     return turn_history
@@ -250,82 +247,6 @@ def turns(self, side):
 
 def rotate_moves(moves, side):
     rotated_moves = []
-    i = 0
-    if side == 'right':
-        while i < len(moves):
-            if moves[i] == 'R':
-                rotated_moves.append('B')
-            elif moves[i] == 'R2':
-                rotated_moves.append('B2')
-            elif moves[i] == '-R':
-                rotated_moves.append('-B')
-            elif moves[i] == 'L':
-                rotated_moves.append('F')
-            elif moves[i] == 'L2':
-                rotated_moves.append('F2')
-            elif moves[i] == '-L':
-                rotated_moves.append('-F')
-            elif moves[i] == 'F':
-                rotated_moves.append('R')
-            elif moves[i] == 'F2':
-                rotated_moves.append('R2')
-            elif moves[i] == '-F':
-                rotated_moves.append('-R')
-            else:
-                rotated_moves.append(moves[i])
-            i += 1
-    elif side == 'left':
-        while i < len(moves):
-            if moves[i] == 'R':
-                rotated_moves.append('F')
-            elif moves[i] == 'R2':
-                rotated_moves.append('F2')
-            elif moves[i] == '-R':
-                rotated_moves.append('-F')
-            elif moves[i] == 'L':
-                rotated_moves.append('B')
-            elif moves[i] == 'L2':
-                rotated_moves.append('B2')
-            elif moves[i] == '-L':
-                rotated_moves.append('-B')
-            elif moves[i] == 'F':
-                rotated_moves.append('L')
-            elif moves[i] == 'F2':
-                rotated_moves.append('L2')
-            elif moves[i] == '-F':
-                rotated_moves.append('-L')
-            else:
-                rotated_moves.append(moves[i])
-            i += 1
-    elif side == 'back':
-        while i < len(moves):
-            if moves[i] == 'R':
-                rotated_moves.append('L')
-            elif moves[i] == 'R2':
-                rotated_moves.append('L2')
-            elif moves[i] == '-R':
-                rotated_moves.append('-L')
-            elif moves[i] == 'L':
-                rotated_moves.append('R')
-            elif moves[i] == 'L2':
-                rotated_moves.append('R2')
-            elif moves[i] == '-L':
-                rotated_moves.append('-R')
-            elif moves[i] == 'F':
-                rotated_moves.append('B')
-            elif moves[i] == 'F2':
-                rotated_moves.append('B2')
-            elif moves[i] == '-F':
-                rotated_moves.append('-B')
-            else:
-                rotated_moves.append(moves[i])
-            i += 1
-
-    return rotated_moves
-
-
-def jrotate_moves(moves, side):
-    rotated_moves = []
 
     if side == 'left':
         rotate_left = {
@@ -333,7 +254,7 @@ def jrotate_moves(moves, side):
             'F': 'L', 'F2': 'L2', '-F': '-L', 'B': 'R', 'B2': 'R2', '-B': '-R'
         }
 
-        for i in range(len(moves)-1):
+        for i in range(len(moves)):
             if moves[i] in rotate_left.keys():
                 rotated_moves.append(rotate_left[moves[i]])
             else:
@@ -346,7 +267,7 @@ def jrotate_moves(moves, side):
             'F': 'B', 'F2': 'B2', '-F': '-B', 'B': 'F', 'B2': 'F2', '-B': '-F'
         }
 
-        for i in range(len(moves)-1):
+        for i in range(len(moves)):
             if moves[i] in rotate_back.keys():
                 rotated_moves.append(rotate_back[moves[i]])
             else:
@@ -359,7 +280,7 @@ def jrotate_moves(moves, side):
             'F': 'R', 'F2': 'R2', '-F': '-R', 'B': 'L', 'B2': 'L2', '-B': '-L'
         }
 
-        for i in range(len(moves)-1):
+        for i in range(len(moves)):
             if moves[i] in rotate_right.keys():
                 rotated_moves.append(rotate_right[moves[i]])
             else:
@@ -367,3 +288,79 @@ def jrotate_moves(moves, side):
 
 
     return rotated_moves
+
+
+def create_scramble(length):
+    import random
+    move_set = list('R R2 -R U U2 -U L L2 -L D D2 -D F F2 -F B B2 -B'.split())
+    i = 0
+    scramble = []
+    while i < length:
+        random_move = move_set[random.randint(0, 17)]
+        if i > 0:
+            while set(random_move.strip()) - {'-', '2'} == set(scramble[i-1].strip()) - {'-', '2'}:
+                random_move = move_set[random.randint(0, 17)]
+
+        scramble.append(random_move)
+        i += 1
+    print(scramble)
+    return scramble
+
+
+def simplify_moves(moves):
+    def move_to_tuple(move):
+        if move.endswith('2'):
+            return (move[0], 2)
+        elif move.startswith('-'):
+            return (move[1], -1)
+        else:
+            return (move[0], 1)
+
+    def tuple_to_move(face, count):
+        count %= 4
+        if count == 0:
+            return None
+        elif count == 1:
+            return face
+        elif count == 2:
+            return face + '2'
+        elif count == 3:
+            return '-' + face
+
+    stack = []
+
+    for move in moves:
+        face, count = move_to_tuple(move)
+        if stack and stack[-1][0] == face:
+            prev_face, prev_count = stack.pop()
+            new_count = prev_count + count
+            simplified = tuple_to_move(face, new_count)
+            if simplified:
+                stack.append(move_to_tuple(simplified))
+        else:
+            stack.append((face, count))
+
+    return [tuple_to_move(face, count) for face, count in stack if tuple_to_move(face, count)]
+
+
+def undo_moves(moves):
+    copy = moves
+    copy.reverse()
+    reversed_moves = []
+    for move in copy:
+        face = ''.join(set(move) - {'-', '2'})
+
+        if move == face:
+            reversed_moves.append('-' + move)
+        elif move == '-' + face:
+            reversed_moves.append(face)
+        elif move == face + '2':
+            reversed_moves.append(move)
+        else:
+            raise ValueError("Fix this")
+
+    return reversed_moves
+
+
+
+
