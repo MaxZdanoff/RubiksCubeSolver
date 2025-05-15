@@ -74,26 +74,6 @@ class RubiksCube:
         Operations.turns(self, side)
 
 
-
-    def create_scramble(self):
-        import random
-        move_set = list('R R2 -R U U2 -U L L2 -L D D2 -D F F2 -F B B2 -B'.split())
-        i = 0
-        scramble = []
-        while i <= 20:
-            random_move = move_set[random.randint(0, 17)]
-            scramble.append(random_move)
-            self.turn(random_move)
-            i += 1
-        print(scramble)
-        return scramble
-
-
-
-
-
-
-
     @staticmethod
     def simplify_moves(moves):
         simplified_moves = list(moves.split())
