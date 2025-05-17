@@ -81,8 +81,22 @@ class Cube:
     red_tuple = ('y', 'r')
 
 
+
+
     def turn(self, side):
         turns(self, side)
+
+
+    def side(self, edge_tuple):
+        if sorted(edge_tuple) == sorted(self.red_top):
+            return 'right'
+        elif sorted(edge_tuple) == sorted(self.blue_top):
+            return 'back'
+        elif sorted(edge_tuple) == sorted(self. orange_top):
+            return 'left'
+        elif sorted(edge_tuple) == sorted(self.green_top):
+            return 'front'
+
 
 
     def solved_pieces(self, edge_tuple=None):
@@ -162,19 +176,38 @@ class Cube:
             self.blue_tuple: 'C D A B'.split(), #rotate_moves back
             self.orange_tuple: 'D A B C'.split() #rotate_moves left
         }
+        rotate = {
+            self.red_tuple: 'right',
+            self.blue_tuple: 'back',
+            self.orange_tuple: 'left'
+        }
 
         general_dictionary = {}
         for i in range(4):
             general_dictionary[list(green_solve.keys())[i]] = green_solve[order[edge_tuple][i]]
 
-
         solved_edges = self.solved_pieces()
-        if len(solved_edges) == 0 or len(general_dictionary[self.locate_edge(edge_tuple)[2]]) == 1:
+
+
+        if len(general_dictionary[self.locate_edge(edge_tuple)[2]]) == 1: #len(solved_edges) == 0:
             moves = general_dictionary[self.locate_edge(edge_tuple)[2]][0]
+            if edge_tuple != self.green_tuple:
+                moves = rotate_moves(moves, rotate[edge_tuple])
+            if self.side(edge_tuple) in solved_edges:
+                moves.extend(undo_moves(list(moves[-2])))
             print(moves)
             for move in moves:
                 self.turn(move)
+                return
         elif len(general_dictionary[self.locate_edge(edge_tuple)[2]]) > 1:
+            bad_inserts = {
+                self.green_tuple: {'left', 'right'},
+                self.red_tuple: {'front', 'back'},
+                self.blue_tuple: {'left', 'right'},
+                self.orange_tuple: {'front', 'back'}
+            }
+            intersection = bad_inserts[edge_tuple] & set(solved_edges)
+
 
 
 

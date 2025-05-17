@@ -286,6 +286,8 @@ def rotate_moves(moves, side):
             else:
                 rotated_moves.append(moves[i])
 
+    if side == None:
+        return moves
 
     return rotated_moves
 
